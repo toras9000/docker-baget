@@ -6,6 +6,7 @@
 
 - latest ([Dockerfile](https://github.com/toras9000/docker-baget/blob/master/build/Dockerfile))
 
+- 0.3.0-preview2
 - 0.3.0-preview1
 - 0.2.0-preview1
 
