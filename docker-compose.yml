@@ -1,11 +1,11 @@
 version: '2'
 services:
   app:
-    image: toras9000/baget:0.3.0-preview2
+    image: toras9000/baget:0.3.0-preview4
     build:
       context: ./build
       args:
-        - BAGET_VER=v0.3.0-preview2
+        - BAGET_VER=v0.3.0-preview4
     restart: unless-stopped
     ports:
       - "8020:80"
