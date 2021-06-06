@@ -1,6 +1,6 @@
-FROM mcr.microsoft.com/dotnet/core/aspnet:2.2
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1
 
-ARG BAGET_VER=v0.2.0-preview1
+ARG BAGET_VER=v0.3.0-preview1
 
 WORKDIR /app
 
