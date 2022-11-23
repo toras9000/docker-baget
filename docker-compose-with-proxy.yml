@@ -1,0 +1,78 @@
+version: '3.5'
+services:
+  db:
+    image: postgres:15
+    restart: unless-stopped
+    networks:
+      default:
+        aliases:
+          - baget-db-container
+    volumes:
+      - ../volumes/baget/db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=baget_user
+      - POSTGRES_PASSWORD=baget_secret
+      - POSTGRES_DB=baget_store
+
+  app:
+    image: toras9000/baget-mp:0.3.0-preview1
+    build:
+      context: ./build
+      args:
+        - BAGET_VER=v0.3.0-preview1
+    restart: unless-stopped
+    networks:
+      default:
+      frontend:
+        aliases:
+          - baget-app-container
+    depends_on:
+      - db
+    volumes:
+      - ../volumes/baget/app/packages:/app/BaGet/packages
+      - ../volumes/baget/app/symbols:/app/BaGet/symbols
+      - ../volumes/baget/app/database:/app/database
+      - ../volumes/baget/app/config:/app/config
+    environment:
+      - INIT_DB_TYPE=PostgreSql
+      - INIT_DB_CONN_STR=Host=baget-db-container;Port=5432;Database=baget_store;User ID=baget_user;Password=baget_secret;
+
+  proxy:
+    image: nginx:1.21
+    restart: unless-stopped
+    command: >
+      sh -c
+      "
+      chmod 444 /assets/certs/ca/*
+      && rm /etc/nginx/conf.d/*
+      && envsubst '
+      $$CONF_UPSTREAM
+      $$CONF_SERVER_NAME
+      $$CONF_SERVER_CERT
+      $$CONF_SERVER_KEY
+      $$CONF_CERTS_DIR
+      '
+      < /assets/configs/server/default.conf.template
+      > /etc/nginx/conf.d/default.conf
+      && exec nginx -g 'daemon off;'
+      "
+    depends_on:
+      - app
+    networks:
+      frontend:
+    ports:
+      - "443:443"
+      - "80:80"
+    volumes:
+      - ./assets/certs/ca:/assets/certs/ca
+      - ./assets/certs/server:/assets/certs/server:ro
+      - ./assets/configs:/assets/configs:ro
+    environment:
+      - CONF_UPSTREAM=baget-app-container
+      - CONF_SERVER_NAME=myserver.local
+      - CONF_SERVER_CERT=/assets/certs/server/server.crt
+      - CONF_SERVER_KEY=/assets/certs/server/server.key
+      - CONF_CERTS_DIR=/assets/certs/ca/
+
+networks:
+  frontend:
