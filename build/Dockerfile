@@ -2,14 +2,13 @@ FROM mcr.microsoft.com/dotnet/sdk:3.1-focal as builder
 
 WORKDIR /work
 
-RUN curl -sL https://deb.nodesource.com/setup_14.x | bash -
 RUN apt-get update
-RUN apt-get install -y git nodejs
+RUN apt-get install -y git
 
 COPY ./assets/helper  ./helper
 RUN dotnet publish ./helper          -c Release -o /work/helper
 
-ARG BAGET_VER=v0.3.0-preview5
+ARG BAGET_VER=v0.4.0-preview1
 RUN git clone https://github.com/loic-sharma/BaGet.git --depth 1 -b "${BAGET_VER}"
 
 RUN dotnet publish ./BaGet/src/BaGet -c Release -o /work/app
