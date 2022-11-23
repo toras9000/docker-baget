@@ -8,7 +8,7 @@ RUN apt-get install -y git
 COPY ./assets/helper  ./helper
 RUN dotnet publish ./helper          -c Release -o /work/helper
 
-ARG BAGET_VER=v0.4.0-preview1
+ARG BAGET_VER=v0.4.0-preview2
 RUN git clone https://github.com/loic-sharma/BaGet.git --depth 1 -b "${BAGET_VER}"
 
 RUN dotnet publish ./BaGet/src/BaGet -c Release -o /work/app
