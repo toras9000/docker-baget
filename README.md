@@ -4,7 +4,7 @@ This is a docker image of the lightweight NuGet and symbol server [BaGet](https:
 
 ## Tags
 
-- [0.3.0-preview4](https://github.com/toras9000/docker-baget/tree/v0.3.0-preview4/build)
+- [0.3.0-preview5](https://github.com/toras9000/docker-baget/tree/v0.3.0-preview5/build)
     - Build using original source.
 
 ## Data location
@@ -44,7 +44,7 @@ The following is an example of a simple docker-compose.yml for Sqlite.
 ```
 services:
   app:
-    image: toras9000/baget-mp:0.3.0-preview4
+    image: toras9000/baget-mp:0.3.0-preview5
     restart: unless-stopped
     ports:
       - "8030:80"
