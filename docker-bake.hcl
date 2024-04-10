@@ -3,7 +3,7 @@ variable "WITH_LATEST_TAG" {
 }
 
 variable "BAGET_IMAGE_VER" {
-  default = "0.3.0-preview5"
+  default = "0.4.0-preview1"
 }
 
 variable "BAGET_FLAVORS" {

@@ -21,7 +21,7 @@ services:
       - POSTGRES_DB=baget_store
 
   app:
-    image: toras9000/baget-mp:0.3.0-preview5
+    image: toras9000/baget-mp:0.4.0-preview1
     restart: unless-stopped
     depends_on:
       db:
