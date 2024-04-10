@@ -1,0 +1,56 @@
+From c803cb247141a70078769f1bcf41846b6c97b5d5 Mon Sep 17 00:00:00 2001
+From: toras9000 <toras9000@example.com>
+Date: Wed, 17 May 2023 20:22:57 +0900
+Subject: [PATCH] Advanced query
+
+---
+ .../Search/DatabaseSearchService.cs           | 33 ++++++++++++++++++-
+ 1 file changed, 32 insertions(+), 1 deletion(-)
+
+diff --git a/src/BaGet.Core/Search/DatabaseSearchService.cs b/src/BaGet.Core/Search/DatabaseSearchService.cs
+index 8b34ac6..b0f62b9 100644
+--- a/src/BaGet.Core/Search/DatabaseSearchService.cs
++++ b/src/BaGet.Core/Search/DatabaseSearchService.cs
+@@ -175,7 +175,38 @@ public async Task<DependentsResponse> FindDependentsAsync(string packageId, Canc
+             if (!string.IsNullOrEmpty(request.Query))
+             {
+                 var query = request.Query.ToLower();
+-                search = search.Where(p => p.Id.ToLower().Contains(query));
++                var conds = query.Split(' ');
++                foreach (var cond in conds)
++                {
++                    if (cond.Length <= 0) continue;
++                    var keys = cond.Split(':');
++                    var filter = (keys.Length == 2) ? (prop: keys[0], kwd: keys[1]) : (prop: null, kwd: keys[0]);
++                    switch (filter.prop)
++                    {
++                        case "version":
++                        case "owner":
++                        case "author":
++                        case "tags":
++                            // not supoprted
++                            break;
++                        case "packageid":
++                            search = search.Where(p => p.Id.ToLower() == filter.kwd);
++                            break;
++                        case "title":
++                            search = search.Where(p => p.Title.ToLower().Contains(filter.kwd));
++                            break;
++                        case "summary":
++                            search = search.Where(p => p.Summary.ToLower().Contains(filter.kwd));
++                            break;
++                        case "description":
++                            search = search.Where(p => p.Description.ToLower().Contains(filter.kwd));
++                            break;
++                        case "id":
++                        default:
++                            search = search.Where(p => p.Id.ToLower().Contains(filter.kwd));
++                            break;
++                    }
++                }
+             }
+ 
+             var packageIds = search.Select(p => p.Id)
+-- 
+2.39.1.windows.1
+

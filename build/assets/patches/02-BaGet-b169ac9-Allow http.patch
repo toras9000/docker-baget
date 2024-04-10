@@ -1,0 +1,25 @@
+From b169ac99b6832b49552f67faff85e7463493a54f Mon Sep 17 00:00:00 2001
+From: toras9000 <toras9000@example.com>
+Date: Wed, 17 May 2023 00:48:20 +0900
+Subject: [PATCH] Allow http
+
+---
+ src/BaGet.Core/Extensions/PackageArchiveReaderExtensions.cs | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/BaGet.Core/Extensions/PackageArchiveReaderExtensions.cs b/src/BaGet.Core/Extensions/PackageArchiveReaderExtensions.cs
+index 3e01432..e96ed4b 100644
+--- a/src/BaGet.Core/Extensions/PackageArchiveReaderExtensions.cs
++++ b/src/BaGet.Core/Extensions/PackageArchiveReaderExtensions.cs
+@@ -131,7 +131,7 @@ private static (Uri repositoryUrl, string repositoryType) GetRepositoryMetadata(
+                 return (null, null);
+             }
+ 
+-            if (repositoryUri.Scheme != Uri.UriSchemeHttps)
++            if (repositoryUri.Scheme != Uri.UriSchemeHttps && repositoryUri.Scheme != Uri.UriSchemeHttp)
+             {
+                 return (null, null);
+             }
+-- 
+2.39.1.windows.1
+

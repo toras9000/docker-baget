@@ -12,6 +12,9 @@ RUN dotnet publish ./helper          -c Release -o /work/helper
 ARG BAGET_VER=xxxxxxxxxx
 RUN git clone https://github.com/loic-sharma/BaGet.git --depth 1 -b "${BAGET_VER}"
 
+COPY ./assets/patches ./patches
+RUN ls -la /work/patches
+RUN git -C ./BaGet apply -p1 /work/patches/*
 RUN dotnet publish ./BaGet/src/BaGet -c Release -o /work/app
 
 

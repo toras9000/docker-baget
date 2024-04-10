@@ -7,7 +7,7 @@ variable "BAGET_IMAGE_VER" {
 }
 
 variable "BAGET_FLAVORS" {
-  default = [""]
+  default = ["patched"]
 }
 
 variable "flavor_tags" {

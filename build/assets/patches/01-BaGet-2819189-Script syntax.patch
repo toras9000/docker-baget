@@ -1,0 +1,28 @@
+From 28191893c8ada90757f9b1b13c7139c7016e8df6 Mon Sep 17 00:00:00 2001
+From: toras9000 <toras9000@example.com>
+Date: Wed, 17 May 2023 00:45:08 +0900
+Subject: [PATCH] Script syntax
+
+---
+ src/BaGet.Web/Pages/Package.cshtml | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/src/BaGet.Web/Pages/Package.cshtml b/src/BaGet.Web/Pages/Package.cshtml
+index 727478f..a203175 100644
+--- a/src/BaGet.Web/Pages/Package.cshtml
++++ b/src/BaGet.Web/Pages/Package.cshtml
+@@ -316,6 +316,11 @@ else
+                     name: "Package Manager",
+                     prefix: "PM>",
+                     content: ["Install-Package @Model.Package.Id -Version @Model.Package.NormalizedVersionString"]
++                },
++                {
++                    name: "Script & Interactive",
++                    prefix: ">",
++                    content: ["#r \"nuget: @Model.Package.Id, @Model.Package.NormalizedVersionString\""]
+                 }
+                 </text>
+             }
+-- 
+2.39.1.windows.1
+

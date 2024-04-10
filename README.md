@@ -6,6 +6,8 @@ This is a docker image of the lightweight NuGet and symbol server [BaGet](https:
 
 - [0.4.0-preview2](https://github.com/toras9000/docker-baget/tree/v0.4.0-preview2/build)
     - Build using original source.
+- [v0.4.0-preview2-patched](https://github.com/toras9000/docker-baget/tree/v0.4.0-preview2-patched/build)
+    - Build with patched sources. ([patches](https://github.com/toras9000/docker-baget/tree/v0.4.0-preview2-patched/build/assets/patches))
 
 ## Data location
 Assume that the following locations in the container are persisted:
@@ -44,7 +46,7 @@ The following is an example of a simple docker-compose.yml for Sqlite.
 ```
 services:
   app:
-    image: toras9000/baget-mp:0.4.0-preview2
+    image: toras9000/baget-mp:0.4.0-preview2-patched
     restart: unless-stopped
     ports:
       - "8030:80"
