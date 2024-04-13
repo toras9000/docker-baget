@@ -1,0 +1,65 @@
+services:
+  db:
+    image: postgres:16
+    restart: unless-stopped
+    networks:
+      default:
+        aliases:
+          - baget-db-container
+    healthcheck:
+      test: pg_isready --quiet --dbname=$${POSTGRES_DB} --username=$${POSTGRES_USER} || exit 1
+      start_period: 5s
+      interval: 10s
+      timeout: 5s
+      retries: 12
+    volumes:
+      - ./volumes/baget/db:/var/lib/postgresql/data
+    environment:
+      - PGDATA=/var/lib/postgresql/data/baget-data
+      - POSTGRES_USER=baget_user
+      - POSTGRES_PASSWORD=baget_secret
+      - POSTGRES_DB=baget_store
+
+  app:
+    image: toras9000/baget-mp:0.3.0-preview1
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      default:
+      frontend:
+        aliases:
+          - baget-app-container
+    healthcheck:
+      test: curl -f http://localhost || exit 1
+      start_period: 5s
+      interval: 10s
+      timeout: 5s
+      retries: 12
+    volumes:
+      - ./volumes/baget/app/config:/app/config
+      - ./volumes/baget/app/packages:/app/BaGet/packages
+      - ./volumes/baget/app/symbols:/app/BaGet/symbols
+    environment:
+      - INIT_DB_TYPE=PostgreSql
+      - INIT_DB_CONN_STR=Host=baget-db-container;Port=5432;Database=baget_store;User ID=baget_user;Password=baget_secret;
+
+  proxy:
+    image: nginx:1.25
+    restart: unless-stopped
+    command: sh -c "exec find /work/certs/ca -type f -print0 | xargs -0 chmod 444 && exec nginx -g 'daemon off;'"
+    depends_on:
+      app:
+        condition: service_started
+    networks:
+      frontend:
+    ports:
+      - "443:443"
+      - "80:80"
+    volumes:
+      - ./assets/configs/server:/etc/nginx/conf.d:ro
+      - ./assets/certs:/work/certs
+
+networks:
+  frontend:
